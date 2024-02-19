@@ -259,6 +259,20 @@ function App() {
           zIndex="2"
         >
           <Text>Fuel Cost: {parseInt(cost)}</Text>
+          <IconButton
+          position="absolute"
+          top="-6"
+          right="-2"
+          width="4px"
+          height="38px"
+          p="2px"
+          isRound
+          colorScheme="pink"
+            aria-label="Close"
+            icon={<FaTimes />}
+            onClick={() => setShowCostDialog(false)}
+            ml={2}
+          />
         </Box>
       )}
     </Flex>
