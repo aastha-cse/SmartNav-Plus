@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -10,7 +10,12 @@ import {
   SkeletonText,
   Text,
 } from "@chakra-ui/react";
-import { FaLocationArrow, FaTimes, FaArrowRight } from "react-icons/fa";
+import {
+  FaLocationArrow,
+  FaTimes,
+  FaArrowRight,
+  FaRupeeSign,
+} from "react-icons/fa";
 
 import {
   useJsApiLoader,
@@ -32,14 +37,28 @@ function App() {
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+  const [cost, setCost] = useState("");
   const [showDistanceDuration, setShowDistanceDuration] = useState(false);
   const [showStartButton, setShowStartButton] = useState(false);
+  // eslint-disable-next-line
   const [currentLocationMarker, setCurrentLocationMarker] = useState(null);
+  // eslint-disable-next-line
   const [currentLocation, setCurrentLocation] = useState(null);
-  const [intervalId, setIntervalId] = useState(null); // State variable for interval ID
+  const [intervalId, setIntervalId] = useState(null);
+  const [average, setAverage] = useState("");
+  const [showCostDialog, setShowCostDialog] = useState(false);
 
   const originRef = useRef();
   const destiantionRef = useRef();
+
+  useEffect(() => {
+    const averageValue = prompt(
+      "Enter the average cost per kilometer of your car."
+    );
+    if (averageValue !== null) {
+      setAverage(parseFloat(averageValue));
+    }
+  }, []);
 
   if (!isLoaded) {
     return <SkeletonText />;
@@ -50,28 +69,33 @@ function App() {
       return;
     }
 
-    const directionsService = new window.google.maps.DirectionsService(); // Access DirectionsService from window.google.maps
+    const directionsService = new window.google.maps.DirectionsService();
     const results = await directionsService.route({
       origin: originRef.current.value,
       destination: destiantionRef.current.value,
-      travelMode: window.google.maps.TravelMode.DRIVING, // Access TravelMode from window.google.maps
+      travelMode: window.google.maps.TravelMode.DRIVING,
     });
     setDirectionsResponse(results);
     setDistance(results.routes[0].legs[0].distance.text);
     setDuration(results.routes[0].legs[0].duration.text);
     setShowDistanceDuration(true);
     setShowStartButton(true);
+
+    if (average !== "") {
+      setCost((104 * parseFloat(distance)) / parseFloat(average));
+    }
   }
 
   function clearRoute() {
     setDirectionsResponse(null);
     setDistance("");
     setDuration("");
+    setCost("");
     setShowDistanceDuration(false);
     setShowStartButton(false);
     originRef.current.value = "";
     destiantionRef.current.value = "";
-    clearInterval(intervalId); // Clear the interval when clearing the route
+    clearInterval(intervalId);
   }
 
   const handleStartJourney = () => {
@@ -93,7 +117,6 @@ function App() {
             destination: destiantionRef.current.value,
             travelMode: window.google.maps.TravelMode.DRIVING,
           });
-
           setDirectionsResponse(results);
           setDistance(results.routes[0].legs[0].distance.text);
           setDuration(results.routes[0].legs[0].duration.text);
@@ -167,11 +190,14 @@ function App() {
             <IconButton
               aria-label="center back"
               icon={<FaTimes />}
-              onClick={clearRoute}
+              onClick= {()=>{
+                clearRoute()
+              setShowCostDialog(false)
+            }}
             />
           </ButtonGroup>
         </HStack>
-        {showDistanceDuration && showStartButton && (
+        {showDistanceDuration && showStartButton && cost !== "" && (
           <HStack spacing={4} mt={4} justifyContent="space-between">
             <Text>Distance: {distance} </Text>
             <Text>Duration: {duration} </Text>
@@ -206,6 +232,35 @@ function App() {
           }
         }}
       />
+      <IconButton
+        position="fixed"
+        bottom="24"
+        right="6"
+        aria-label="Fuel Cost"
+        icon={<FaRupeeSign style={{ color: "white" }} />}
+        isRound
+        backgroundColor={"black"}
+        onClick={() => {
+          setShowCostDialog(true);
+          if (average !== "") {
+            setCost((104 * parseFloat(distance)) / parseFloat(average));
+          }
+        }}
+      />
+      {showCostDialog && (
+        <Box
+          position="fixed"
+          bottom="40"
+          right="6"
+          bgColor="white"
+          p={4}
+          borderRadius="lg"
+          boxShadow="base"
+          zIndex="2"
+        >
+          <Text>Fuel Cost: {parseInt(cost)}</Text>
+        </Box>
+      )}
     </Flex>
   );
 }
