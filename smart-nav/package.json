@@ -43,5 +43,7 @@
     ]
   },
   "main": "index.js",
+  "repository": "git@github.com:aastha-cse/SmartNav-Plus.git",
+  "author": "aastha-cse <guptaaastha824@gmail.com>",
   "license": "MIT"
 }

@@ -25,6 +25,8 @@ import {
   DirectionsRenderer,
 } from "@react-google-maps/api";
 
+import Temp from "./components/Temp";
+
 const center = { lat: 30.3165, lng: 78.0322 };
 
 function App() {
@@ -46,7 +48,8 @@ function App() {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [intervalId, setIntervalId] = useState(null);
   const [average, setAverage] = useState("");
-  const [showCostDialog, setShowCostDialog] = useState(false);
+  const [showCost, setShowCost] = useState(false);
+  const [showTemp, setShowTemp] = useState(false);
 
   const originRef = useRef();
   const destiantionRef = useRef();
@@ -131,6 +134,14 @@ function App() {
     }
   };
 
+  const toggleTemp = () => {
+    setShowTemp(!showTemp);
+  };
+
+  const toggleCost = () => {
+    setShowCost(!showCost);
+  };
+
   return (
     <Flex
       position="relative"
@@ -192,7 +203,6 @@ function App() {
               icon={<FaTimes />}
               onClick= {()=>{
                 clearRoute()
-              setShowCostDialog(false)
             }}
             />
           </ButtonGroup>
@@ -211,8 +221,8 @@ function App() {
       </Box>
       <IconButton
         position="fixed"
-        bottom="12"
-        right="6"
+        bottom="14"
+        right="4"
         aria-label="center back"
         icon={<FaLocationArrow style={{ color: "white" }} />}
         isRound
@@ -234,47 +244,44 @@ function App() {
       />
       <IconButton
         position="fixed"
-        bottom="24"
-        right="6"
+        top="5"
+        right="4"
+        width={57}
+        height={57}
+        aria-label="Weather"
+        icon={<FaRupeeSign style={{ color: "white" }} />}
+        isRound
+        backgroundColor={"black"}
+        onClick={toggleTemp}
+      />
+      <IconButton
+        position="fixed"
+        bottom="2"
+        right="4"
         aria-label="Fuel Cost"
         icon={<FaRupeeSign style={{ color: "white" }} />}
         isRound
         backgroundColor={"black"}
-        onClick={() => {
-          setShowCostDialog(true);
-          if (average !== "") {
-            setCost((104 * parseFloat(distance)) / parseFloat(average));
-          }
-        }}
+        onClick={toggleCost}
       />
-      {showCostDialog && (
-        <Box
+      {showTemp && <Temp defaultLocation={destiantionRef.current.value} />}
+      
+        {showCost && (<Box
           position="fixed"
-          bottom="40"
-          right="6"
-          bgColor="white"
-          p={4}
+          bottom="2"
+          right="65px"
+          p={2}
           borderRadius="lg"
-          boxShadow="base"
+          boxShadow="0.1px 0.1px 15px 0.5px"
           zIndex="2"
+          fontSize={14}
+          color="rgb(111, 109, 109)"
+          bgColor="rgba(255, 255, 255, 0.05)"
+          backdropFilter= "blur(7px)"
         >
           <Text>Fuel Cost: {parseInt(cost)}</Text>
-          <IconButton
-          position="absolute"
-          top="-6"
-          right="-2"
-          width="4px"
-          height="38px"
-          p="2px"
-          isRound
-          colorScheme="pink"
-            aria-label="Close"
-            icon={<FaTimes />}
-            onClick={() => setShowCostDialog(false)}
-            ml={2}
-          />
-        </Box>
-      )}
+        </Box>)}
+      
     </Flex>
   );
 }
