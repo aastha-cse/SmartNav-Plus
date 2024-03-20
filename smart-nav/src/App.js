@@ -17,6 +17,8 @@ import {
   FaRupeeSign,
 } from "react-icons/fa";
 
+import { TiWeatherPartlySunny } from "react-icons/ti";
+
 import {
   useJsApiLoader,
   GoogleMap,
@@ -84,8 +86,8 @@ function App() {
     setShowDistanceDuration(true);
     setShowStartButton(true);
 
-    if (average !== "") {
-      setCost((104 * parseFloat(distance)) / parseFloat(average));
+    if (average !== null) {
+      setShowCost((104 * parseFloat(distance)) / parseFloat(average));
     }
   }
 
@@ -195,12 +197,13 @@ function App() {
           </Box>
 
           <ButtonGroup>
-            <Button colorScheme="pink" type="submit" onClick={calculateRoute}>
+            <Button colorScheme="pink" type="submit" onClick={calculateRoute} _focus={{ outline: "none" }}>
               Calculate Route
             </Button>
             <IconButton
               aria-label="center back"
               icon={<FaTimes />}
+              _focus={{ outline: "none" }}
               onClick= {()=>{
                 clearRoute()
             }}
@@ -215,6 +218,7 @@ function App() {
               aria-label="center back"
               icon={<FaArrowRight />}
               onClick={handleStartJourney}
+              _focus={{ outline: "none" }}
             ></IconButton>
           </HStack>
         )}
@@ -226,7 +230,9 @@ function App() {
         aria-label="center back"
         icon={<FaLocationArrow style={{ color: "white" }} />}
         isRound
-        backgroundColor={"black"}
+        backgroundColor="rgb(91, 90, 90)"
+        _hover={{ backgroundColor: "rgb(128, 126, 126)" }}
+        _focus={{ outline: "none" }}
         onClick={() => {
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
@@ -249,9 +255,11 @@ function App() {
         width={57}
         height={57}
         aria-label="Weather"
-        icon={<FaRupeeSign style={{ color: "white" }} />}
+        icon={<TiWeatherPartlySunny style={{ color: "white", height:"27px", width:"27px" }} />}
         isRound
-        backgroundColor={"black"}
+        backgroundColor="rgb(91, 90, 90)"
+        _hover={{ backgroundColor: "rgb(128, 126, 126)" }}
+        _focus={{ outline: "none" }}
         onClick={toggleTemp}
       />
       <IconButton
@@ -261,7 +269,9 @@ function App() {
         aria-label="Fuel Cost"
         icon={<FaRupeeSign style={{ color: "white" }} />}
         isRound
-        backgroundColor={"black"}
+        backgroundColor="rgb(91, 90, 90)"
+        _hover={{ backgroundColor: "rgb(128, 126, 126)" }}
+        _focus={{ outline: "none" }}
         onClick={toggleCost}
       />
       {showTemp && <Temp defaultLocation={destiantionRef.current.value} />}
@@ -279,7 +289,7 @@ function App() {
           bgColor="rgba(255, 255, 255, 0.05)"
           backdropFilter= "blur(7px)"
         >
-          <Text>Fuel Cost: {parseInt(cost)}</Text>
+          <Text>Fuel Cost: {parseInt(showCost)}</Text>
         </Box>)}
       
     </Flex>
