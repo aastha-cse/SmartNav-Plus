@@ -1,0 +1,76 @@
+.mainPage {
+    font-family: "Baloo Bhaijaan 2", sans-serif !important;
+}
+
+/* Navigation Bar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    color: #0c0c0c;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    width: 40px;
+    height: auto;
+}
+
+.company-name {
+    font-size: 2.2rem;
+    color: #013F7F;
+    font-weight: bold;
+    margin-top: 0.5rem;
+    ;
+}
+
+.nav-links {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    margin-left: auto;
+}
+
+.nav-links li {
+    margin-right: 20px;
+}
+
+.nav-links li:last-child {
+    margin-right: 0;
+}
+
+.nav-links div {
+    color: #0c0c0c;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.nav-links div:hover {
+    font-weight: bold;
+}
+
+.selected-link {
+    font-weight: bold;
+}
+
+.signup-button {
+    padding: 10px 20px;
+    background-color: #8FCCC3;
+    color: #013F7F;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-left: 1rem;
+}
+
+.signup-button:hover {
+    background-color: #94ded3;
+}
