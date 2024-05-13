@@ -14,6 +14,11 @@
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  opacity: 0;
+}
+
+.section.section.section-visible {
+  opacity: 1;
 }
 
 .section-right {
@@ -59,34 +64,31 @@
   text-align: justify;
 }
 
-/* Animation for sliding in sections */
 @keyframes slideInLeft {
-  from {
+  0% {
     opacity: 0;
-    transform: translateX(-100px);
-    /* Slide in from left */
+    transform: translateX(-100%);
   }
 
-  to {
+  100% {
     opacity: 1;
     transform: translateX(0);
   }
 }
 
 @keyframes slideInRight {
-  from {
+  0% {
     opacity: 0;
-    transform: translateX(100px);
-    /* Slide in from right */
+    transform: translateX(100%);
   }
 
-  to {
+  100% {
     opacity: 1;
     transform: translateX(0);
   }
+
 }
 
-/* Apply animation to sections */
 .section.section-visible.section-right {
   animation: slideInLeft 2s ease-out;
 }
