@@ -1,92 +1,45 @@
-// import React, { useRef, useEffect, useState } from "react";
-// import "./Restaurant.css";
-// import Map from "./images/map.png";
-// import Weather from "./images/weather.png";
-// import Fuel from "./images/fuel.png";
+import React from "react";
+import "./Blog.css";
+import Carousel from 'react-bootstrap/Carousel';
+import 'bootstrap/dist/css/bootstrap.min.css'; 
+import Hidden from "./images/hidden.png";
+import Guide from "./images/guide.png";
+import Experience from "./images/experience.png";
+import Tips from "./images/tips.png";
 
-// const SlideInSection = ({ image, heading, text, direction }) => {
-//   const sectionRef = useRef(null);
-//   const [isVisible, setIsVisible] = useState(false);
+function Hotel() {
+  return (
+    <Carousel interval={3000} style={{ maxHeight: "500px", marginTop:"-50px" }}>
+      <Carousel.Item>
+        <img src={Hidden} className="d-block w-100" alt="Hotel" style={{ maxWidth: "100%", height: "auto" }} />
+        <Carousel.Caption>
+          <h3 style={{fontSize:"2.5rem"}}>Unlock Hidden Travel Treasures</h3>
+          <p>Offers insider tips, recommendations, and insights about specific destinations, hidden gems, and lesser-known attractions that might not be readily available through conventional navigation features.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <img src={Guide} className="d-block w-100" alt="Rating" style={{ maxWidth: "100%", height: "auto" }} />
+        <Carousel.Caption>
+          <h3 style={{fontSize:"2.5rem"}}>Journey-Enriching Travel Guides</h3>
+          <p>Serves as comprehensive travel guides, providing detailed information about popular tourist spots, historic landmarks, cultural events, dining options, and recreational activities in various destinations.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <img src={Experience} className="d-block w-100" alt="Cafe" style={{ maxWidth: "100%", height: "auto" }} />
+        <Carousel.Caption>
+          <h3 style={{fontSize:"2.5rem"}}>Embark on Authentic Adventures</h3>
+          <p>Features personal travel stories, experiences, and anecdotes shared by fellow travelers or local experts. These firsthand accounts add authenticity and relatability, helping users connect with the destinations on a deeper level and make informed decisions about their own trips.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <img src={Tips} className="d-block w-100" alt="Cafe" style={{ maxWidth: "100%", height: "auto" }} />
+        <Carousel.Caption>
+          <h3 style={{fontSize:"2.5rem"}}>Discover Pro Travel Tips</h3>
+          <p>Offers practical tips, advice, and hacks related to navigation, transportation, accommodation, dining, safety, budgeting, and more.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+    </Carousel>
+  );
+}
 
-//   useEffect(() => {
-//     let currentRef = sectionRef.current;
-
-//     const observer = new IntersectionObserver(
-//       ([entry]) => {
-//         if (entry.isIntersecting) {
-//           setIsVisible(true);
-//           observer.unobserve(currentRef);
-//         }
-//       },
-//       {
-//         rootMargin: "0px",
-//         threshold: 0.5,
-//       }
-//     );
-
-//     if (currentRef) {
-//       observer.observe(currentRef);
-//     }
-
-//     return () => {
-//       if (currentRef) {
-//         observer.unobserve(currentRef);
-//       }
-//     };
-//   }, []);
-
-//   const sectionClass = `section-${direction} ${
-//     isVisible ? "section-visible" : ""
-//   }`;
-
-//   return (
-//     <div className={`section ${sectionClass}`} ref={sectionRef}>
-//       <div className="image-container">
-//         <img src={image} alt="Section" />
-//       </div>
-//       <div className="text-container">
-//         <h3>{heading}</h3>
-//         <p>{text}</p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// const Restaurant = () => {
-//   const sections = [
-//     {
-//       image: Map,
-//       heading: "Discover the Shortest Route",
-//       text: "This feature empowers users to find the most efficient path between two or more locations, optimizing travel time and minimizing distances. By leveraging advanced mapping algorithms, our application ensures seamless navigation, allowing users to reach their destinations swiftly and with ease.",
-//       direction: "right",
-//     },
-//     {
-//       image: Weather,
-//       heading: "Real Time Weather Forecast",
-//       text: "Stay informed and plan your journey more effectively with our real-time weather forecast feature integrated into our map application. Receive up-to-the-minute weather updates, including temperature, humidity, wind speed, and more, directly on the map interface.",
-//       direction: "left",
-//     },
-//     {
-//       image: Fuel,
-//       heading: "Estimated Fuel Cost",
-//       text: "Users can make informed decisions about their travel routes and budgeting by receiving an approximation of the fuel expenses associated with their journey. By factoring in variables such as distance, vehicle fuel efficiency, and current fuel prices, this feature helps users plan their trips effectively.",
-//       direction: "right",
-//     },
-//   ];
-
-//   return (
-//     <div className="container">
-//       {sections.map((section, index) => (
-//         <SlideInSection
-//           key={index}
-//           image={section.image}
-//           heading={section.heading}
-//           text={section.text}
-//           direction={section.direction}
-//         />
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default Restaurant;
+export default Hotel;
