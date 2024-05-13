@@ -20,13 +20,13 @@ function Home() {
         newContent = 'Explore exciting destinations around the world.';
         break;
       case 'Hotels and Cafes':
-        newContent = 'Find comfortable accommodations for your trip.';
+        newContent = 'Find comfortable accommodations and restaurants for your trip.';
         break;
       case 'Things to do':
         newContent = 'Discover fun activities and attractions.';
         break;
       case 'Blogs':
-        newContent = 'Enjoy delicious cuisine at top-rated restaurants.';
+        newContent = 'Unlock Insights and Guidance - Navigate with Blogs';
         break;
       default:
         newContent = '';
