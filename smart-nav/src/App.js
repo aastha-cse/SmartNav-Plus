@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import "./Styles.css";
 import brandLogo from "./components/images/logo.png";
 import Home from "./components/HomePage/Home.js";
-import Map from "./components/Map.js";
+import Map from "./components/MapPage/Map.js";
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
