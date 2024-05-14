@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import "./Home.css";
-import pinLogo from "../images/destination.png";
-import hotelLogo from "../images/hotel.png";
-import todoLogo from "../images/todo.png";
-import dineLogo from "../images/dine.png";
+import pinLogo from "./images/destination.png";
+import hotelLogo from "./images/hotel.png";
+import todoLogo from "./images/todo.png";
+import dineLogo from "./images/dine.png";
 import Destination from './components/Destination/Destination.js';
 import Hotel from './components/Hotel/Hotel.js';
 import Activity from './components/Activity/Activity.js';

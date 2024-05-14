@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "./Styles.css";
-import brandLogo from "./components/images/logo.png";
+import brandLogo from "./images/logo.png";
 import Home from "./components/HomePage/Home.js";
 import Map from "./components/MapPage/Map.js";
 
