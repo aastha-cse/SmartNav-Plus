@@ -75,7 +75,7 @@ const Destination = () => {
   ];
 
   return (
-    <div className="container">
+    <div className="box">
       {sections.map((section, index) => (
         <SlideInSection
           key={index}

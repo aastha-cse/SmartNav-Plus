@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import "./Styles.css";
 import brandLogo from "./components/images/logo.png";
 import Home from "./components/HomePage/Home.js";
+import Map from "./components/Map.js";
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -15,9 +16,9 @@ function App() {
     case 'home':
       currentComponent = <Home />;
       break;
-    // case 'map':
-    //   currentComponent = <Map />;
-      // break;
+    case 'map':
+      currentComponent = <Map />;
+      break;
     default:
       currentComponent = <Home />;
   }
@@ -32,8 +33,7 @@ function App() {
 
         <ul className='nav-links'>
           <li><div className={currentPage === 'home' ? 'selected-link' : ''} onClick={() => handleNavClick('home')}>Home</div></li>
-          {/* <li><a href='#' onClick={() => handleNavClick('map')}>Map</a></li> */}
-          {/* Add similar onClick handlers for other navigation links */}
+          <li><div  className={currentPage === 'map' ? 'selected-link' : ''} onClick={() => handleNavClick('map')}>Map</div></li> 
         </ul>
 
         <button className='signup-button'>Sign Up</button>
