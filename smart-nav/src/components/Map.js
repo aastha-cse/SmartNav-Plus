@@ -250,7 +250,7 @@ function Map() {
       />
       <IconButton
         position="fixed"
-        top="5"
+        top="105"
         right="4"
         width={57}
         height={57}
