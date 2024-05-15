@@ -15,6 +15,10 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 import {
   FaLocationArrow,
@@ -31,6 +35,8 @@ import {
   Marker,
   Autocomplete,
   DirectionsRenderer,
+  StreetViewPanorama,
+  Geocoder,
 } from "@react-google-maps/api";
 
 import Temp from "./Temp.js";
@@ -44,6 +50,7 @@ function Map() {
   });
 
   const [map, setMap] = useState(null);
+  const [mapType, setMapType] = useState("roadmap");
   const [directionsResponse, setDirectionsResponse] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
@@ -78,6 +85,30 @@ function Map() {
     return <SkeletonText />;
   }
 
+  const toggleMapType = (mapType) => {
+    if (mapType === "roadmap") {
+      map.setMapTypeId(window.google.maps.MapTypeId.ROADMAP);
+    } else if (mapType === "satellite") {
+      map.setMapTypeId(window.google.maps.MapTypeId.SATELLITE);
+    } else if (mapType === "streetview") {
+      const panorama = map.getStreetView();
+      const destination = destiantionRef.current.value;
+      const geocoder = new window.google.maps.Geocoder();
+      geocoder.geocode({ address: destination }, (results, status) => {
+        if (status === "OK" && results[0]) {
+          const destLocation = results[0].geometry.location;
+          panorama.setPosition(destLocation);
+          panorama.setVisible(true);
+        } else {
+          console.error(
+            "Geocode was not successful for the following reason:",
+            status
+          );
+        }
+      });
+    }
+  };
+
   async function calculateRoute() {
     if (originRef.current.value === "" || destiantionRef.current.value === "") {
       return;
@@ -95,10 +126,10 @@ function Map() {
     setShowDistanceDuration(true);
     setShowStartButton(true);
 
-      if (average !== "" && distance!=="") {
-        setCost((104 * parseFloat(distance)) / parseFloat(average));
-        setShowCost(true);
-      }
+    if (average !== "" && distance !== "") {
+      setCost((104 * parseFloat(distance)) / parseFloat(average));
+      setShowCost(true);
+    }
   }
 
   function clearRoute() {
@@ -173,9 +204,10 @@ function Map() {
           mapContainerStyle={{ width: "100%", height: "100%" }}
           options={{
             zoomControl: false,
-            streetViewControl: false,
+            streetViewControl: true,
             mapTypeControl: false,
             fullscreenControl: false,
+            mapTypeId: mapType,
           }}
           onLoad={(map) => setMap(map)}
         >
@@ -233,12 +265,30 @@ function Map() {
           <HStack spacing={4} mt={4} justifyContent="space-between">
             <Text>Distance: {distance} </Text>
             <Text>Duration: {duration} </Text>
-            <IconButton
-              aria-label="center back"
-              icon={<FaArrowRight />}
-              onClick={handleStartJourney}
-              _focus={{ outline: "none" }}
-            ></IconButton>
+            <ButtonGroup>
+              <Menu>
+                <MenuButton as={Button} colorScheme="pink">
+                  Map Views
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => toggleMapType("roadmap")}>
+                    Map
+                  </MenuItem>
+                  <MenuItem onClick={() => toggleMapType("satellite")}>
+                    Satellite
+                  </MenuItem>
+                  <MenuItem onClick={() => toggleMapType("streetview")}>
+                    Street View
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+              <IconButton
+                aria-label="center back"
+                icon={<FaArrowRight />}
+                onClick={handleStartJourney}
+                _focus={{ outline: "none" }}
+              ></IconButton>
+            </ButtonGroup>
           </HStack>
         )}
       </Box>
@@ -299,20 +349,33 @@ function Map() {
       />
       {showTemp && <Temp defaultLocation={destiantionRef.current.value} />}
 
-      <Modal isOpen={isAverageModalOpen} onClose={() => setIsAverageModalOpen(false)} isCentered>
+      <Modal
+        isOpen={isAverageModalOpen}
+        onClose={() => setIsAverageModalOpen(false)}
+        isCentered
+      >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Enter the average cost per kilometer of your car for fuel cost estimation...</ModalHeader>
+          <ModalHeader>
+            Enter the average cost per kilometer of your car for fuel cost
+            estimation...
+          </ModalHeader>
           <ModalBody>
-            <Input
-              type="number"
-              placeholder="Average cost per kilometer"
-              value={average}
-              onChange={handleAverageInputChange}
-            />
+            <form onSubmit={(e) => e.preventDefault()}>
+              <Input
+                type="text"
+                placeholder="Average cost per kilometer"
+                value={average}
+                onChange={handleAverageInputChange}
+                pattern="^\d*\.?\d*$"
+              />
+            </form>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="pink" onClick={() => setIsAverageModalOpen(false)}>
+            <Button
+              colorScheme="pink"
+              onClick={() => setIsAverageModalOpen(false)}
+            >
               Enter
             </Button>
           </ModalFooter>
