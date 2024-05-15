@@ -9,6 +9,12 @@ import {
   Input,
   SkeletonText,
   Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
 } from "@chakra-ui/react";
 import {
   FaLocationArrow,
@@ -44,26 +50,29 @@ function Map() {
   const [cost, setCost] = useState("");
   const [showDistanceDuration, setShowDistanceDuration] = useState(false);
   const [showStartButton, setShowStartButton] = useState(false);
-  // eslint-disable-next-line
   const [currentLocationMarker, setCurrentLocationMarker] = useState(null);
-  // eslint-disable-next-line
   const [currentLocation, setCurrentLocation] = useState(null);
   const [intervalId, setIntervalId] = useState(null);
   const [average, setAverage] = useState("");
   const [showCost, setShowCost] = useState(false);
   const [showTemp, setShowTemp] = useState(false);
+  const [isAverageModalOpen, setIsAverageModalOpen] = useState(true);
 
   const originRef = useRef();
   const destiantionRef = useRef();
 
   useEffect(() => {
-    const averageValue = prompt(
-      "Enter the average cost per kilometer of your car."
-    );
-    if (averageValue !== null) {
-      setAverage(parseFloat(averageValue));
+    if (average !== "" && distance !== "") {
+      setCost((104 * parseFloat(distance)) / parseFloat(average));
+      setShowCost(true);
     }
-  }, []);
+  }, [average, distance]);
+
+  useEffect(() => {
+    if (average !== "") {
+      setIsAverageModalOpen(false);
+    }
+  }, [average]);
 
   if (!isLoaded) {
     return <SkeletonText />;
@@ -86,9 +95,10 @@ function Map() {
     setShowDistanceDuration(true);
     setShowStartButton(true);
 
-    if (average !== null) {
-      setShowCost((104 * parseFloat(distance)) / parseFloat(average));
-    }
+      if (average !== "" && distance!=="") {
+        setCost((104 * parseFloat(distance)) / parseFloat(average));
+        setShowCost(true);
+      }
   }
 
   function clearRoute() {
@@ -144,6 +154,10 @@ function Map() {
     setShowCost(!showCost);
   };
 
+  const handleAverageInputChange = (e) => {
+    setAverage(parseFloat(e.target.value));
+  };
+
   return (
     <Flex
       position="relative"
@@ -197,16 +211,21 @@ function Map() {
           </Box>
 
           <ButtonGroup>
-            <Button colorScheme="pink" type="submit" onClick={calculateRoute} _focus={{ outline: "none" }}>
+            <Button
+              colorScheme="pink"
+              type="submit"
+              onClick={calculateRoute}
+              _focus={{ outline: "none" }}
+            >
               Calculate Route
             </Button>
             <IconButton
               aria-label="center back"
               icon={<FaTimes />}
               _focus={{ outline: "none" }}
-              onClick= {()=>{
-                clearRoute()
-            }}
+              onClick={() => {
+                clearRoute();
+              }}
             />
           </ButtonGroup>
         </HStack>
@@ -255,7 +274,11 @@ function Map() {
         width={57}
         height={57}
         aria-label="Weather"
-        icon={<TiWeatherPartlySunny style={{ color: "white", height:"27px", width:"27px" }} />}
+        icon={
+          <TiWeatherPartlySunny
+            style={{ color: "white", height: "27px", width: "27px" }}
+          />
+        }
         isRound
         backgroundColor="rgb(91, 90, 90)"
         _hover={{ backgroundColor: "rgb(128, 126, 126)" }}
@@ -275,8 +298,29 @@ function Map() {
         onClick={toggleCost}
       />
       {showTemp && <Temp defaultLocation={destiantionRef.current.value} />}
-      
-        {showCost && (<Box
+
+      <Modal isOpen={isAverageModalOpen} onClose={() => setIsAverageModalOpen(false)} isCentered>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Enter the average cost per kilometer of your car for fuel cost estimation...</ModalHeader>
+          <ModalBody>
+            <Input
+              type="number"
+              placeholder="Average cost per kilometer"
+              value={average}
+              onChange={handleAverageInputChange}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="pink" onClick={() => setIsAverageModalOpen(false)}>
+              Enter
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {showCost && (
+        <Box
           position="fixed"
           bottom="2"
           right="65px"
@@ -287,11 +331,11 @@ function Map() {
           fontSize={14}
           color="rgb(111, 109, 109)"
           bgColor="rgba(255, 255, 255, 0.05)"
-          backdropFilter= "blur(7px)"
+          backdropFilter="blur(7px)"
         >
-          <Text>Fuel Cost: {parseInt(showCost)}</Text>
-        </Box>)}
-      
+          <Text>Fuel Cost: {parseInt(cost)}</Text>
+        </Box>
+      )}
     </Flex>
   );
 }

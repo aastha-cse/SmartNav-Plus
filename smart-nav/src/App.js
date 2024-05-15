@@ -33,7 +33,7 @@ function App() {
 
         <ul className='nav-links'>
           <li><div className={currentPage === 'home' ? 'selected-link' : ''} onClick={() => handleNavClick('home')}>Home</div></li>
-          <li><div  className={currentPage === 'map' ? 'selected-link' : ''} onClick={() => handleNavClick('map')}>Map</div></li> 
+          <li><div className={currentPage === 'map' ? 'selected-link' : ''} onClick={() => handleNavClick('map')}>Map</div></li> 
         </ul>
 
         <button className='signup-button'>Sign Up</button>
