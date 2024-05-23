@@ -42,11 +42,12 @@ import {
 import Temp from "./Temp.js";
 
 const center = { lat: 30.3165, lng: 78.0322 };
+const libraries = ["places"];
 
 function Map() {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: ["places"],
+    libraries: libraries,
   });
 
   const [map, setMap] = useState(null);
@@ -70,16 +71,14 @@ function Map() {
 
   useEffect(() => {
     if (average !== "" && distance !== "") {
-      setCost((104 * parseFloat(distance)) / parseFloat(average));
-      setShowCost(true);
+      const distanceInKm = parseFloat(distance.replace(/,/g, "").replace(" km", ""));
+      setCost((104 * distanceInKm) / parseFloat(average));
     }
   }, [average, distance]);
 
-  useEffect(() => {
-    if (average !== "") {
-      setIsAverageModalOpen(false);
-    }
-  }, [average]);
+  const handleModalClose = (e) => {
+    setIsAverageModalOpen(false);
+  };
 
   if (!isLoaded) {
     return <SkeletonText />;
@@ -121,14 +120,15 @@ function Map() {
       travelMode: window.google.maps.TravelMode.DRIVING,
     });
     setDirectionsResponse(results);
-    setDistance(results.routes[0].legs[0].distance.text);
+    const distanceText = results.routes[0].legs[0].distance.text;
+    setDistance(distanceText);
     setDuration(results.routes[0].legs[0].duration.text);
     setShowDistanceDuration(true);
     setShowStartButton(true);
 
-    if (average !== "" && distance !== "") {
-      setCost((104 * parseFloat(distance)) / parseFloat(average));
-      setShowCost(true);
+    const distanceInKm = parseFloat(distanceText.replace(/,/g, "").replace(" km", ""));
+    if (average !== "" && distanceInKm !== "") {
+      setCost((104 * distanceInKm) / parseFloat(average));
     }
   }
 
@@ -186,7 +186,10 @@ function Map() {
   };
 
   const handleAverageInputChange = (e) => {
-    setAverage(parseFloat(e.target.value));
+    const value = e.target.value;
+    if (!isNaN(value) || value === "" || value === "." || value === ".0") {
+      setAverage(parseFloat(value));
+    }
   };
 
   return (
@@ -234,11 +237,7 @@ function Map() {
           </Box>
           <Box flexGrow={1}>
             <Autocomplete>
-              <Input
-                type="text"
-                placeholder="Destination"
-                ref={destiantionRef}
-              />
+              <Input type="text" placeholder="Destination" ref={destiantionRef} />
             </Autocomplete>
           </Box>
 
@@ -349,11 +348,7 @@ function Map() {
       />
       {showTemp && <Temp defaultLocation={destiantionRef.current.value} />}
 
-      <Modal
-        isOpen={isAverageModalOpen}
-        onClose={() => setIsAverageModalOpen(false)}
-        isCentered
-      >
+      <Modal isOpen={isAverageModalOpen} onClose={handleModalClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -361,21 +356,16 @@ function Map() {
             estimation...
           </ModalHeader>
           <ModalBody>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <Input
-                type="text"
-                placeholder="Average cost per kilometer"
-                value={average}
-                onChange={handleAverageInputChange}
-                pattern="^\d*\.?\d*$"
-              />
-            </form>
+            <Input
+              type="number"
+              step="any"
+              placeholder="Average cost per kilometer"
+              value={average}
+              onChange={handleAverageInputChange}
+            />
           </ModalBody>
           <ModalFooter>
-            <Button
-              colorScheme="pink"
-              onClick={() => setIsAverageModalOpen(false)}
-            >
+            <Button type="submit" colorScheme="pink" onClick={handleModalClose}>
               Enter
             </Button>
           </ModalFooter>
@@ -388,6 +378,7 @@ function Map() {
           bottom="2"
           right="65px"
           p={2}
+          width="fit-content"
           borderRadius="lg"
           boxShadow="0.1px 0.1px 15px 0.5px"
           zIndex="2"
