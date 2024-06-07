@@ -26,19 +26,14 @@ import {
   FaArrowRight,
   FaRupeeSign,
 } from "react-icons/fa";
-
 import { TiWeatherPartlySunny } from "react-icons/ti";
-
 import {
   useJsApiLoader,
   GoogleMap,
   Marker,
   Autocomplete,
   DirectionsRenderer,
-  StreetViewPanorama,
-  Geocoder,
 } from "@react-google-maps/api";
-
 import Temp from "./Temp.js";
 
 const center = { lat: 30.3165, lng: 78.0322 };
@@ -58,13 +53,12 @@ function Map() {
   const [cost, setCost] = useState("");
   const [showDistanceDuration, setShowDistanceDuration] = useState(false);
   const [showStartButton, setShowStartButton] = useState(false);
-  const [currentLocationMarker, setCurrentLocationMarker] = useState(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
   const [intervalId, setIntervalId] = useState(null);
   const [average, setAverage] = useState("");
   const [showCost, setShowCost] = useState(false);
   const [showTemp, setShowTemp] = useState(false);
   const [isAverageModalOpen, setIsAverageModalOpen] = useState(true);
+  const [currentLocation, setCurrentLocation] = useState(center); 
 
   const originRef = useRef();
   const destiantionRef = useRef();
@@ -85,6 +79,7 @@ function Map() {
   }
 
   const toggleMapType = (mapType) => {
+    setMapType(mapType);
     if (mapType === "roadmap") {
       map.setMapTypeId(window.google.maps.MapTypeId.ROADMAP);
     } else if (mapType === "satellite") {
@@ -151,10 +146,7 @@ function Map() {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
-        setCurrentLocationMarker({
-          position: userLocation,
-        });
-        setCurrentLocation(userLocation);
+        if(currentLocation) setCurrentLocation(userLocation);
 
         const interval = setInterval(async () => {
           const directionsService = new window.google.maps.DirectionsService();

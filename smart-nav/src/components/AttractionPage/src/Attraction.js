@@ -30,7 +30,7 @@ const Attraction = () => {
     );
 
     setFilteredPlaces(filteredPlaces);
-  }, [rating]);
+  }, [rating, places]);
   
   useEffect(() => {
     if (bounds.sw && bounds.ne) {
