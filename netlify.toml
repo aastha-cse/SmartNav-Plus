@@ -1,9 +1,0 @@
-[build]
-  command = "CI='' yarn build"  
-  publish = "/" 
-  base = "/smart-nav"  
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
