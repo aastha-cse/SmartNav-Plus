@@ -1,6 +1,6 @@
 [build]
   command = "CI='' yarn build"  
-  publish = "smart-nav/build/" 
+  publish = "smart-nav/" 
   base = "/smart-nav"  
 
 [[redirects]]
